@@ -4,12 +4,16 @@ import com.example.business.CourseFilter;
 import com.example.business.DynamicQueryService;
 import com.example.business.UniversityService;
 import com.example.domain.Department;
+import com.example.domain.Person;
 import com.example.domain.Staff;
+import com.example.repo.CourseRepo;
 import com.example.repo.DepartmentRepo;
 import com.example.repo.StaffRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 
 import static com.example.business.CourseFilter.filterBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,8 +36,11 @@ public class CriteriaQueryTest {
     @Test
     void findByCriteria() {
         UniversityFactory.fillUniversity(universityService);
-        Department humanities = departmentRepo.findByName("Humanities").get();
-        Staff professorBlack = staffRepo.findByLastName("Black").stream().findFirst().get();
+
+        Department humanities = departmentRepo.findOne(Example.of(new Department("Humanities", null),
+                ExampleMatcher.matching().withIgnoreCase())).orElse(null);
+        Staff professorBlack = staffRepo.findAll(Example.of(new Staff(new Person(null, "Black")),
+                ExampleMatcher.matching().withIgnoreCase())).stream().findFirst().orElse(null);
 
         System.out.println('\n' + "*** All Humanities Courses");
         queryAndVerify(filterBy().department(humanities));
@@ -53,7 +60,7 @@ public class CriteriaQueryTest {
 
 
     private void queryAndVerify(CourseFilter filter) {
-        queryService.filterByQueryDsl(filter)
+        queryService.filterByExample(filter)
                 .forEach(course -> {
                     filter.getInstructor().ifPresent(i -> assertEquals(i, course.getInstructor()));
                     filter.getCredits().ifPresent(c -> assertEquals(c, course.getCredits()));

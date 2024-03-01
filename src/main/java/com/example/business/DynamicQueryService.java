@@ -29,4 +29,8 @@ public class DynamicQueryService {
                 .forEach(courses::add);
         return courses;
     }
+
+    public List<Course> filterByExample(CourseFilter filter){
+        return courseRepo.findAll(filter.getExampleProbe());
+    }
 }
