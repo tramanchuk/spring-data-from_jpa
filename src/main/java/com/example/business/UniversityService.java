@@ -1,10 +1,10 @@
 package com.example.business;
 
-import com.example.dao.CourseDao;
-import com.example.dao.DepartmentDao;
-import com.example.dao.StaffDao;
-import com.example.dao.StudentDao;
 import com.example.domain.*;
+import com.example.repo.CourseRepo;
+import com.example.repo.DepartmentRepo;
+import com.example.repo.StaffRepo;
+import com.example.repo.StudentRepo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,35 +15,35 @@ import java.util.List;
 @Repository
 public class UniversityService {
 
-    private DepartmentDao departmentDao;
+    private DepartmentRepo departmentRepo;
 
-    private StaffDao staffDao;
+    private StaffRepo staffRepo;
 
-    private StudentDao studentDao;
+    private StudentRepo studentRepo;
 
-    private CourseDao courseDao;
+    private CourseRepo courseRepo;
 
-    public UniversityService(CourseDao courseDao, DepartmentDao departmentDao, StaffDao staffDao, StudentDao studentDao) {
-        this.courseDao = courseDao;
-        this.departmentDao = departmentDao;
-        this.staffDao = staffDao;
-        this.studentDao = studentDao;
+    public UniversityService(CourseRepo courseRepo, DepartmentRepo departmentRepo, StaffRepo staffRepo, StudentRepo studentRepo) {
+        this.courseRepo = courseRepo;
+        this.departmentRepo = departmentRepo;
+        this.staffRepo = staffRepo;
+        this.studentRepo = studentRepo;
     }
 
     public Student createStudent(String firstName, String lastName, boolean fullTime, int age) {
-        return studentDao.save(new Student(new Person(firstName, lastName), fullTime, age));
+        return studentRepo.save(new Student(new Person(firstName, lastName), fullTime, age));
     }
 
     public Staff createFaculty(String firstName, String lastName) {
-        return staffDao.save(new Staff(new Person(firstName, lastName)));
+        return staffRepo.save(new Staff(new Person(firstName, lastName)));
     }
 
     public Department createDepartment(String deptname, Staff deptChair) {
-        return departmentDao.save(new Department(deptname, deptChair));
+        return departmentRepo.save(new Department(deptname, deptChair));
     }
 
     public Course createCourse(String name, int credits, Staff professor, Department department) {
-        return courseDao.save(new Course(name, credits, professor, department));
+        return courseRepo.save(new Course(name, credits, professor, department));
     }
 
     public Course createCourse(String name, int credits, Staff professor, Department department, Course... prereqs) {
@@ -51,31 +51,31 @@ public class UniversityService {
         for (Course p : prereqs) {
             c.addPrerequisite(p);
         }
-        return courseDao.save(c);
+        return courseRepo.save(c);
     }
 
     public List<Course> findAllCourses() {
-        return courseDao.findAll();
+        return courseRepo.findAll();
     }
 
     public List<Staff> findAllStaff() {
-        return staffDao.findAll();
+        return staffRepo.findAll();
     }
 
     public List<Department> findAllDepartments() {
-        return departmentDao.findAll();
+        return departmentRepo.findAll();
     }
 
     public List<Student> findAllStudents() {
-        return studentDao.findAll();
+        return studentRepo.findAll();
     }
 
     public void deleteAll() {
         try {
-            studentDao.deleteAll();
-            courseDao.deleteAll();
-            departmentDao.deleteAll();
-            staffDao.deleteAll();
+            studentRepo.deleteAll();
+            courseRepo.deleteAll();
+            departmentRepo.deleteAll();
+            staffRepo.deleteAll();
         } catch (Exception e) {
             e.printStackTrace();
         }

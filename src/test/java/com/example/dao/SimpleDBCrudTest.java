@@ -1,14 +1,11 @@
 package com.example.dao;
 
-import com.example.UniversityApplication;
 import com.example.business.UniversityService;
 import com.example.domain.Staff;
+import com.example.repo.StaffRepo;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +22,7 @@ public class SimpleDBCrudTest {
     private UniversityService universityService;
 
     @Autowired
-    private StaffDao staffDao;
+    private StaffRepo staffRepo;
 
     private List<Staff> allStaff;
     private Optional<Staff> oneStaff;
@@ -44,17 +41,17 @@ public class SimpleDBCrudTest {
         // Test Find by Id
         Staff deanThomas = allStaff.get(0);
         System.out.println(deanThomas);
-        assertEquals(deanThomas, staffDao.findById(deanThomas.getId()).get());
+        assertEquals(deanThomas, staffRepo.findById(deanThomas.getId()).get());
 
         // Test Update, Change first Name to Patrick
         deanThomas.getMember().setFirstName("Patrick");
-        staffDao.save(deanThomas);
+        staffRepo.save(deanThomas);
 
         assertEquals("Patrick",
-                staffDao.findById(deanThomas.getId()).get().getMember().getFirstName());
+                staffRepo.findById(deanThomas.getId()).get().getMember().getFirstName());
 
-        staffDao.delete(deanThomas);
-        allStaff = staffDao.findAll();
+        staffRepo.delete(deanThomas);
+        allStaff = staffRepo.findAll();
         assertEquals(totalStaff -1, allStaff.size());
         allStaff.stream().forEach(System.out::println);
     }

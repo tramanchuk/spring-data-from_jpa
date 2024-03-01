@@ -1,17 +1,13 @@
 package com.example.dao;
 
-import com.example.UniversityApplication;
 import com.example.business.CourseFilter;
 import com.example.business.DynamicQueryService;
 import com.example.business.UniversityService;
 import com.example.domain.Department;
 import com.example.domain.Staff;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.example.business.CourseFilter.filterBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
