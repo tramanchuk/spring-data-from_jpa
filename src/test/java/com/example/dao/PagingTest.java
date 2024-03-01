@@ -1,11 +1,14 @@
 package com.example.dao;
 
-import com.example.UniversityApplication;
 import com.example.business.UniversityService;
 import com.example.domain.Staff;
+import com.example.repo.StaffRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -17,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 class PagingTest {
     @Autowired
-    private StaffDao staffDao;
+    private StaffRepo staffRepo;
     @Autowired
     private UniversityService universityService;
 
@@ -26,7 +29,9 @@ class PagingTest {
         UniversityFactory.fillUniversity(universityService);
         List<Staff> allStaff = universityService.findAllStaff();
         Staff firstStaff = allStaff.get(0);
-        List<Staff> staffPage = staffDao.find(1, 5);
+        Sort s = Sort.by(Sort.Order.asc("member.lastName"));
+        Page<Staff> springDataPage = staffRepo.findAll(PageRequest.of(0, 5, s));
+        List<Staff> staffPage = springDataPage.toList();
         assertTrue(staffPage.get(0).getMember().getLastName().compareTo(staffPage.get(1).getMember().getLastName()) < 0);
         assertTrue(staffPage.get(1).getMember().getLastName().compareTo(staffPage.get(2).getMember().getLastName()) < 0);
         assertTrue(staffPage.get(2).getMember().getLastName().compareTo(staffPage.get(3).getMember().getLastName()) < 0);
