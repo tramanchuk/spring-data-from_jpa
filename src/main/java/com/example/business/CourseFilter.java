@@ -9,6 +9,9 @@ import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import com.querydsl.core.BooleanBuilder;
+
+import static com.example.domain.QCourse.course;
 
 /**
  * Helper class to filter courses in the Dynamic Query Service
@@ -58,5 +61,12 @@ public class CourseFilter {
                     predicates.add(criteriaBuilder.equal(root.get("instructor"), i)));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+    public com.querydsl.core.types.Predicate getQueryDslPredicate() {
+        BooleanBuilder predicate = new BooleanBuilder();
+        department.ifPresent(d -> predicate.and(course.department.eq(d)));
+        credits.ifPresent(c -> predicate.and(course.credits.eq(c)));
+        instructor.ifPresent(i -> predicate.and(course.instructor.eq(i)));
+        return predicate;
     }
 }
