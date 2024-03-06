@@ -1,17 +1,16 @@
 package com.example.repo;
 
 import com.example.domain.Staff;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 
-@RepositoryRestResource(path = "staff", collectionResourceRel = "staff")
-public interface StaffRepo extends JpaRepository<Staff, Integer> {
+public interface StaffRepo extends CrudRepository<Staff, Integer>, PagingAndSortingRepository<Staff, Integer> {
 
-    @Query("SELECT s FROM Staff s WHERE s.member.lastName = :lastName")
-    List<Staff> findByLastName(@Param("lastName") String lastName);
+    List<Staff> findByMemberLastName(String lastName);
+    @Query("{ 'member.firstName' : ?0 }")
+    List<Staff> findByFirstName(String lastName);
 
 }
