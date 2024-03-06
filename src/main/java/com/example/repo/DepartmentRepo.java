@@ -1,16 +1,16 @@
 package com.example.repo;
 
 import com.example.domain.Department;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.Optional;
-import java.util.List;
+public interface DepartmentRepo extends ReactiveCrudRepository<Department, String> {
+    Mono<Department> findByName(String name);
 
-public interface DepartmentRepo extends MongoRepository<Department, Integer> {
+    Flux<Department> findByChairId(String chairId);
 
-    Optional<Department> findByName(String name);
-    List<Department> findByChairId(String chairId);
     @Query("{ 'name' : { $regex: ?0 } }")
-    List<Department> findNameByPattern(String pattern);
+    Flux<Department> findNameByPattern(String pattern);
 }
